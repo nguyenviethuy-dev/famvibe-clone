@@ -6,11 +6,9 @@ function App() {
   return (
     <BrowserRouter>
       <RootLayout>
-        <div>
-          {/* Nội dung của ứng dụng */}
-          <h1>Welcome to the App!</h1>
-          <p>This is the main content of the app.</p>
-        </div>
+      <>
+      
+      </>
       </RootLayout>
     </BrowserRouter>
   );

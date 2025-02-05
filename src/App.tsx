@@ -1,16 +1,17 @@
-
-import { BrowserRouter } from 'react-router-dom';
-import RootLayout from '@/layouts/df-layout/Layout';  // Import RootLayout
+import { GiftButton } from '@/components/pin-app/GiftButton';
+import { BackToTop } from '@/components/pin-app/BackToTop';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from '@/pages/Home';
 
 function App() {
   return (
-    <BrowserRouter>
-      <RootLayout>
-      <>
-      
-      </>
-      </RootLayout>
-    </BrowserRouter>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home children={undefined}/>} />
+      </Routes>
+      <GiftButton />
+      <BackToTop />
+    </Router>
   );
 }
 

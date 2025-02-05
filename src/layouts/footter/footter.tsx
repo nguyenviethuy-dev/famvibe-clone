@@ -209,6 +209,9 @@ export default function NewsletterSignup() {
           </div>
         </div>
       </div>
+          <div className="space-y-1 bg-red-700 text-white text-center py-4">
+            <p className="flex justify-center">© 2023 Famvibe Store. Powered by Shopify</p>
+          </div>
     </div>
   );
 }

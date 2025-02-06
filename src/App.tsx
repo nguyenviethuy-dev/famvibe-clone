@@ -1,5 +1,5 @@
-import { GiftButton } from '@/components/pin-app/GiftButton';
-import { BackToTop } from '@/components/pin-app/BackToTop';
+import { GiftButton } from '@/components/pin-app/gift/GiftButton';
+import { BackToTop } from '@/components/pin-app/backtotop/BackToTop';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from '@/pages/Home';
 import NewArrival from '@/pages/NewArrival';

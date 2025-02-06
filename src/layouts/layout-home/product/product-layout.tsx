@@ -1,4 +1,4 @@
-import ProductCarousel from "@/layouts/product-trending/components/product-carousel"
+import ProductCarousel from "@/layouts/layout-home/product/components/product-carousel"
 
 export default function ProductsPage() {
   return (

@@ -1,11 +1,12 @@
 import RootLayout from "@/layouts/df-layout/Layout";
-// import BannerSection2 from "@/layouts/baner/banner2";
-import ProductPage from "@/layouts/productpage-layout/productpage";
+import NewArrival from "@/layouts/df-layout/banner-newarrival";
+import ProductPage from "@/layouts/new-arrivals/productpage-layout/productpage";
 
 export default function Homepage() {
     return (
       <div lang="en">
         <RootLayout >
+        <NewArrival />
         <ProductPage />
         </RootLayout>
       </div>

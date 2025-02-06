@@ -1,5 +1,5 @@
-import { SiteHeader } from "@/layouts/header/site-header";
-import  Footter  from "@/layouts/footter/footter";
+import { SiteHeader } from "@/layouts/df-layout/header/site-header";
+import  Footter  from "@/layouts/df-layout/footter/footter";
 import type React from "react";
 
 export default function RootLayout({

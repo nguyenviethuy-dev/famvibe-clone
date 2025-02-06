@@ -57,9 +57,9 @@ export function SiteHeader() {
               New Arrival
             </Link>
 
-            <a href="/best-seller" className="hover:text-primary">
+            <Link to="/best-seller" className="hover:text-primary">
               Best Seller
-            </a>
+            </Link>
 
             <div className="relative group">
               <button className="hover:text-primary flex items-center gap-1">

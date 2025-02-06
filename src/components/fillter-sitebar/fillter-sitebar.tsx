@@ -66,7 +66,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ onFilterChange, productCo
     "Dad",
     "Son",
     "Mom",
-    "Dog Mom",
+    "Dog",
     "Family",
   ]
   const productTypes = ["T Shirt", "Mug", "Pillow", "Poster", "Fridge Magnet", "3D T Shirts"]

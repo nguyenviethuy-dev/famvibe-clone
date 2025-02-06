@@ -2,10 +2,11 @@
 import { useState } from "react"
 import { Search, User, ShoppingCart, ChevronDown } from "lucide-react"
 import { AuthModal } from "./auth-modal"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export function SiteHeader() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+  const navigate = useNavigate()
 
   return (
     <>
@@ -210,7 +211,10 @@ export function SiteHeader() {
             </a>
 
             <div className="ml-auto">
-              <button className="flex items-center gap-2 border px-6 py-2.5 text-base rounded-lg hover:bg-gray-50">
+              <button
+              onClick={() => navigate("/tracking")} 
+              className="flex items-center gap-2 border px-6 py-2.5 text-base rounded-lg hover:bg-gray-50"
+              >
                 <Search className="h-5 w-5" />
                 Tracking Order
               </button>

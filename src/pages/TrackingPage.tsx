@@ -1,13 +1,11 @@
 import RootLayout from "@/layouts/df-layout/Layout";
-import NewArrival from "@/layouts/baner/banner-newarrival";
-import ProductPage from "@/layouts/productpage-layout/newarrival/productpage-na";
+import Tracking from "@/layouts/trackingpage/trackingpage";
 
 export default function Homepage() {
     return (
       <div lang="en">
         <RootLayout >
-        <NewArrival />
-        <ProductPage />
+        <Tracking />
         </RootLayout>
       </div>
     );

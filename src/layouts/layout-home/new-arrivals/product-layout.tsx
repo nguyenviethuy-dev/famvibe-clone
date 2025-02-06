@@ -1,4 +1,4 @@
-import ProductCarousel from "@/layouts/new-arrivals/components/product-carousel"
+import ProductCarousel from "./components/product-carousel"
 
 export default function ProductsNewArrivalsPage() {
   return (

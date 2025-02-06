@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from '@/pages/Home';
 import NewArrival from '@/pages/NewArrival';
 import BestSeller from '@/pages/BestSeller';
+import ProductDetailPage from "./pages/ProductDetailPage"
+import TrackingPage from "@/pages/TrackingPage"
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/new-arrival" element={<NewArrival />} />
         <Route path="/best-seller" element={<BestSeller />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />{/* Route cho trang chi tiết sản phẩm */}
+        <Route path="/tracking" element={<TrackingPage />} />
       </Routes>
       <GiftButton />
       <BackToTop />

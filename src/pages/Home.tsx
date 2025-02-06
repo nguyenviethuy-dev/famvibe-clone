@@ -1,5 +1,5 @@
 import RootLayout from "@/layouts/df-layout/Layout";
-import BannerSection from "@/layouts/baner/banner";
+import BannerSection from "@/layouts/baner/banner-home";
 import ProductsPage from "@/layouts/product/product-layout";
 import ProductsTrendingPage from "@/layouts/product-trending/product-layout";
 import ProductsNewArrivalsPage from "@/layouts/new-arrivals/product-layout";

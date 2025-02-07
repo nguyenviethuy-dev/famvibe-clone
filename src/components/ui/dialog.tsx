@@ -1,37 +1,42 @@
-import * as React from "react";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { cn } from "@/lib/utils";
+"use client"
 
-export function Dialog({ children, ...props }: DialogPrimitive.DialogProps) {
-  return <DialogPrimitive.Root {...props}>{children}</DialogPrimitive.Root>;
-}
-
-export function DialogTrigger({ children, ...props }: DialogPrimitive.DialogTriggerProps) {
-  return <DialogPrimitive.Trigger {...props} asChild>{children}</DialogPrimitive.Trigger>;
-}
-
-export function DialogContent({ className, children, ...props }: DialogPrimitive.DialogContentProps) {
+export const Dialog = ({
+  open,
+  onOpenChange,
+  children,
+}: { open: boolean; onOpenChange: (open: boolean) => void; children: React.ReactNode }) => {
   return (
-    <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-      <DialogPrimitive.Content
-        className={cn(
-          "fixed left-1/2 top-1/2 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-6 shadow-lg",
-          className
-        )}
-        {...props}
-      >
-        {children}
-        <DialogPrimitive.Close className="absolute right-4 top-4">✖</DialogPrimitive.Close>
-      </DialogPrimitive.Content>
-    </DialogPrimitive.Portal>
-  );
+    <div className={`fixed inset-0 z-50 flex items-center justify-center ${open ? "" : "hidden"}`}>
+      <div className="relative bg-white rounded-lg shadow-lg p-4 w-full max-w-md">{children}</div>
+    </div>
+  )
 }
 
-export function DialogHeader({ children }: { children: React.ReactNode }) {
-  return <div className="mb-4 text-lg font-semibold">{children}</div>;
-}
+export const DialogHeader = ({ children }: { children: React.ReactNode }) => (
+  <header className="flex items-center justify-between border-b border-gray-200 pb-4">{children}</header>
+)
 
-export function DialogTitle({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-xl font-bold">{children}</h2>;
-}
+export const DialogBody = ({ children }: { children: React.ReactNode }) => <div className="p-4">{children}</div>
+
+export const DialogFooter = ({ children }: { children: React.ReactNode }) => (
+  <footer className="flex justify-end pt-4 border-t border-gray-200">{children}</footer>
+)
+
+export const DialogTitle = ({ children }: { children: React.ReactNode }) => (
+  <h2 className="text-lg font-medium">{children}</h2>
+)
+
+export const Button = ({
+  children,
+  type = "button",
+  onClick,
+}: { children: React.ReactNode; type?: "button" | "submit"; onClick: () => void }) => (
+  <button
+    type={type}
+    onClick={onClick}
+    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+  >
+    {children}
+  </button>
+)
+

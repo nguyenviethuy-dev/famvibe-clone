@@ -1,4 +1,6 @@
-import { useState } from "react"
+"use client"
+
+import { useState, useEffect } from "react"
 import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from "lucide-react"
 
 interface Product {
@@ -70,34 +72,49 @@ const products: Product[] = [
 
 export default function ProductCarousel() {
   const [startIndex, setStartIndex] = useState(0)
+  const [visibleProducts, setVisibleProducts] = useState(4)
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setVisibleProducts(1)
+      } else if (window.innerWidth < 768) {
+        setVisibleProducts(2)
+      } else if (window.innerWidth < 1024) {
+        setVisibleProducts(3)
+      } else {
+        setVisibleProducts(4)
+      }
+    }
+
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
   const nextProducts = () => {
-    setStartIndex((prevIndex) => {
-      const newIndex = (prevIndex + 1) % products.length;
-      return newIndex;
-    });
-  };
+    setStartIndex((prevIndex) => (prevIndex + 1) % products.length)
+  }
 
   const previousProducts = () => {
-    setStartIndex((prevIndex) => {
-      const newIndex = (prevIndex - 1 + products.length) % products.length;
-      return newIndex;
-    });
-  };
+    setStartIndex((prevIndex) => (prevIndex - 1 + products.length) % products.length)
+  }
 
-  const visibleProducts = [
-    ...products.slice(startIndex),
-    ...products.slice(0, startIndex)
-  ].slice(0, 4);
+  const displayedProducts = [...Array(visibleProducts)].map(
+    (_, index) => products[(startIndex + index) % products.length],
+  )
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <h2 className="text-3xl font-bold text-center mb-8">New Arrivals</h2>
+      <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">New Arrivals</h2>
 
       <div className="relative">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {visibleProducts.map((product) => (
-            <div key={product.id} className="rounded-lg p-4 border border-gray-200 group shadow transition-shadow duration-300 hover:shadow-xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          {displayedProducts.map((product) => (
+            <div
+              key={product.id}
+              className="w-full flex-shrink-0 rounded-lg p-4 border border-gray-200 group shadow transition-shadow duration-300 hover:shadow-xl"
+            >
               <div className="relative overflow-hidden rounded-lg mb-4">
                 <img
                   src={product.imageUrl || "/placeholder.svg"}
@@ -107,9 +124,7 @@ export default function ProductCarousel() {
               </div>
 
               <div className="space-y-2">
-                <h3 className="text-sm text-gray-700 line-clamp-2">
-                  {product.title}
-                </h3>
+                <h3 className="text-sm text-gray-700 line-clamp-2">{product.title}</h3>
                 <div className="flex items-center">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <StarIcon
@@ -131,19 +146,20 @@ export default function ProductCarousel() {
         </div>
 
         <button
-          className="absolute -left-4 top-1/2 -translate-y-1/2 bg-white shadow-lg hover:bg-gray-100 rounded-full p-2"
+          className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 bg-white shadow-lg hover:bg-gray-100 rounded-full p-2 z-10 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center"
           onClick={previousProducts}
         >
-          <ChevronLeftIcon className="h-6 w-6" />
+          <ChevronLeftIcon className="h-4 w-4 sm:h-6 sm:w-6" />
         </button>
 
         <button
-          className="absolute -right-4 top-1/2 -translate-y-1/2 bg-white shadow-lg hover:bg-gray-100 rounded-full p-2"
+          className="absolute -right-2 sm:-right-4 top-1/2 -translate-y-1/2 bg-white shadow-lg hover:bg-gray-100 rounded-full p-2 z-10 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center"
           onClick={nextProducts}
         >
-          <ChevronRightIcon className="h-6 w-6" />
+          <ChevronRightIcon className="h-4 w-4 sm:h-6 sm:w-6" />
         </button>
       </div>
     </div>
   )
 }
+

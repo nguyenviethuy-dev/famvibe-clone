@@ -1,3 +1,4 @@
+
 import { useState } from "react"
 import { ChevronLeft, ChevronRight, Star } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -64,24 +65,24 @@ export default function CustomerReviews() {
   }
 
   const handleNext = () => {
-    setStartIndex((prev) => Math.min(reviews.length - 4, prev + 1))
+    setStartIndex((prev) => Math.min(reviews.length - 1, prev + 1))
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-bold">Our Happy Customers</h2>
+    <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
+      <div className="flex justify-between items-center mb-6 sm:mb-8">
+        <h2 className="text-2xl sm:text-3xl font-bold">Our Happy Customers</h2>
         <a href="#" className="text-red-600 hover:text-red-700">
           See All
         </a>
       </div>
 
       <div className="relative">
-        <div className="flex gap-6">
-          {reviews.slice(startIndex, startIndex + 4).map((review) => (
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+          {reviews.slice(startIndex, startIndex + (window.innerWidth >= 640 ? 4 : 1)).map((review) => (
             <div
               key={review.id}
-              className="min-w-[calc(25%-1.25rem)] bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+              className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
               onMouseEnter={() => setFocusedId(review.id)}
               onMouseLeave={() => setFocusedId(null)}
             >
@@ -100,7 +101,7 @@ export default function CustomerReviews() {
                     <Star
                       key={i}
                       className={cn(
-                        "w-5 h-5 transition-transform duration-300",
+                        "w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300",
                         focusedId === review.id && "scale-110",
                         "text-yellow-400 fill-yellow-400",
                       )}
@@ -125,26 +126,27 @@ export default function CustomerReviews() {
           onClick={handlePrevious}
           disabled={startIndex === 0}
           className={cn(
-            "absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center",
+            "absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 sm:-translate-x-4 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white shadow-lg flex items-center justify-center",
             "hover:bg-gray-50 transition-colors duration-300",
             "disabled:opacity-50 disabled:cursor-not-allowed",
           )}
         >
-          <ChevronLeft className="w-6 h-6" />
+          <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
         </button>
 
         <button
           onClick={handleNext}
-          disabled={startIndex >= reviews.length - 4}
+          disabled={startIndex >= reviews.length - (window.innerWidth >= 640 ? 4 : 1)}
           className={cn(
-            "absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center",
+            "absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 sm:translate-x-4 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white shadow-lg flex items-center justify-center",
             "hover:bg-gray-50 transition-colors duration-300",
             "disabled:opacity-50 disabled:cursor-not-allowed",
           )}
         >
-          <ChevronRight className="w-6 h-6" />
+          <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
         </button>
       </div>
     </div>
   )
 }
+

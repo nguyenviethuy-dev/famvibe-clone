@@ -2,7 +2,8 @@ import ProductCarousel from "@/layouts/layout-home/product/components/product-ca
 
 export default function ProductsPage() {
   return (
-    <div className="py-8 space-y-12">
+    // <div className="py-8 space-y-12">
+    <div>
       {/* Carousel Section */}
       <section>
         <ProductCarousel />

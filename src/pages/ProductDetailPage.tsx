@@ -1,7 +1,7 @@
 
 // import { useState, useEffect } from "react"
 // import { useParams, useNavigate } from "react-router-dom"
-// import { Star } from "lucide-react"
+// import { Star, ChevronLeft } from "lucide-react" // Import ChevronLeft icon
 // import { Button } from "@/components/ui/button"
 // import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 // import { Label } from "@/components/ui/Label"
@@ -12,6 +12,7 @@
 //   const { id } = useParams<{ id: string }>()
 //   const navigate = useNavigate()
 //   const [product, setProduct] = useState<Product | null>(null)
+//   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
 //   useEffect(() => {
 //     const foundProduct = products.find((p) => p.id === Number(id))
@@ -21,6 +22,24 @@
 //       setProduct(foundProduct)
 //     }
 //   }, [id, navigate])
+
+//   const handleNextImage = () => {
+//     if (product) {
+//       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % (product.image1 ? 3 : 2))
+//     }
+//   }
+
+//   const handlePrevImage = () => {
+//     if (product) {
+//       setCurrentImageIndex(
+//         (prevIndex) => (prevIndex - 1 + (product.image1 ? 3 : 2)) % (product.image1 ? 3 : 2)
+//       )
+//     }
+//   }
+
+//   const handleBackClick = () => {
+//     navigate(-1)
+//   }
 
 //   if (!product) {
 //     return (
@@ -34,29 +53,56 @@
 //     )
 //   }
 
+//   const images = [product.image, product.image1].filter(Boolean) // Collect non-null images
+
 //   return (
 //     <div className="container mx-auto px-4 py-8">
+//       <Button onClick={handleBackClick} className="mb-4 flex items-center gap-2 opacity-10 border-current">
+//         <ChevronLeft className="w-5 h-5" />
+//       </Button>
 //       <div className="grid md:grid-cols-2 gap-8">
 //         {/* Product Images */}
 //         <div className="space-y-4">
 //           <div className="aspect-square relative overflow-hidden rounded-lg border">
-//             <img src={product.image || "/placeholder.svg"} alt={product.name} className="object-cover w-full h-full" />
+//             <img
+//               src={images[currentImageIndex] || "/placeholder.svg"}
+//               alt={product.name}
+//               className="object-cover w-full h-full"
+//             />
+//             {/* Navigation Buttons */}
+//             <div className="absolute top-1/2 left-0 transform -translate-y-1/2 text-white">
+//               <button
+//                 onClick={handlePrevImage}
+//                 className="bg-black bg-opacity-50 p-2 rounded-full"
+//               >
+//                 &lt;
+//               </button>
+//             </div>
+//             <div className="absolute top-1/2 right-0 transform -translate-y-1/2 text-white">
+//               <button
+//                 onClick={handleNextImage}
+//                 className="bg-black bg-opacity-50 p-2 rounded-full"
+//               >
+//                 &gt;
+//               </button>
+//             </div>
 //           </div>
 //           <div className="grid grid-cols-4 gap-4">
-//             <div className="aspect-square relative overflow-hidden rounded-lg border cursor-pointer">
-//               <img
-//                 src={product.image || "/placeholder.svg"}
-//                 alt={product.name}
-//                 className="object-cover w-full h-full"
-//               />
-//             </div>
-//             <div className="aspect-square relative overflow-hidden rounded-lg border cursor-pointer">
-//               <img
-//                 src={product.image1 || "/placeholder.svg"}
-//                 alt={`${product.name} alternate view`}
-//                 className="object-cover w-full h-full"
-//               />
-//             </div>
+//             {images.map((image, index) => (
+//               <div
+//                 key={index}
+//                 className={`aspect-square relative overflow-hidden rounded-lg border cursor-pointer ${
+//                   index === currentImageIndex ? "ring-2 ring-primary" : ""
+//                 }`}
+//                 onClick={() => setCurrentImageIndex(index)}
+//               >
+//                 <img
+//                   src={image || "/placeholder.svg"}
+//                   alt={`${product.name} alternate view`}
+//                   className="object-cover w-full h-full"
+//                 />
+//               </div>
+//             ))}
 //           </div>
 //         </div>
 
@@ -126,22 +172,25 @@
 
 // export default ProductDetailPage
 
-
+"use client"
 
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { Star, ChevronLeft } from "lucide-react" // Import ChevronLeft icon
-import { Button } from "@/components/ui/button"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Star, ChevronLeft, Plus, Minus } from "lucide-react"
+import { Button } from "../components/ui/button"
+import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group"
 import { Label } from "@/components/ui/Label"
 import { products } from "@/layouts/data/products"
 import type { Product } from "@/layouts/data/type/product"
+import { useCart } from "@/layouts/cart-product/contexts/cart-context"
 
-const ProductDetailPage = () => {
+export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [product, setProduct] = useState<Product | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [quantity, setQuantity] = useState(1)
+  const { dispatch } = useCart()
 
   useEffect(() => {
     const foundProduct = products.find((p) => p.id === Number(id))
@@ -160,14 +209,29 @@ const ProductDetailPage = () => {
 
   const handlePrevImage = () => {
     if (product) {
-      setCurrentImageIndex(
-        (prevIndex) => (prevIndex - 1 + (product.image1 ? 3 : 2)) % (product.image1 ? 3 : 2)
-      )
+      setCurrentImageIndex((prevIndex) => (prevIndex - 1 + (product.image1 ? 3 : 2)) % (product.image1 ? 3 : 2))
     }
   }
 
   const handleBackClick = () => {
     navigate(-1)
+  }
+
+  const handleQuantityChange = (delta: number) => {
+    setQuantity((prev) => Math.max(1, prev + delta))
+  }
+
+  const handleAddToCart = () => {
+    if (product) {
+      dispatch({
+        type: "ADD_ITEM",
+        payload: {
+          product,
+          quantity,
+        },
+      })
+      navigate("/cart")
+    }
   }
 
   if (!product) {
@@ -182,7 +246,7 @@ const ProductDetailPage = () => {
     )
   }
 
-  const images = [product.image, product.image1].filter(Boolean) // Collect non-null images
+  const images = [product.image, product.image1].filter(Boolean)
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -200,18 +264,12 @@ const ProductDetailPage = () => {
             />
             {/* Navigation Buttons */}
             <div className="absolute top-1/2 left-0 transform -translate-y-1/2 text-white">
-              <button
-                onClick={handlePrevImage}
-                className="bg-black bg-opacity-50 p-2 rounded-full"
-              >
+              <button onClick={handlePrevImage} className="bg-black bg-opacity-50 p-2 rounded-full">
                 &lt;
               </button>
             </div>
             <div className="absolute top-1/2 right-0 transform -translate-y-1/2 text-white">
-              <button
-                onClick={handleNextImage}
-                className="bg-black bg-opacity-50 p-2 rounded-full"
-              >
+              <button onClick={handleNextImage} className="bg-black bg-opacity-50 p-2 rounded-full">
                 &gt;
               </button>
             </div>
@@ -280,7 +338,21 @@ const ProductDetailPage = () => {
               </div>
             )}
 
-            <Button size="lg" className="w-full">
+            {/* Add quantity controls */}
+            <div className="space-y-2">
+              <Label htmlFor="quantity">Quantity</Label>
+              <div className="flex items-center gap-3">
+                <button className="border rounded p-2" onClick={() => handleQuantityChange(-1)}>
+                  <Minus className="w-4 h-4" />
+                </button>
+                <span>{quantity}</span>
+                <button className="border rounded p-2" onClick={() => handleQuantityChange(1)}>
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <Button size="lg" className="w-full" onClick={handleAddToCart}>
               Add to Cart
             </Button>
           </div>
@@ -299,4 +371,3 @@ const ProductDetailPage = () => {
   )
 }
 
-export default ProductDetailPage

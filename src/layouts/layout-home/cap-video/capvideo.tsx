@@ -34,7 +34,7 @@ export default function VideoTutorial() {
               <iframe
                 width="100%"
                 height="100%"
-                src="https://www.youtube.com/embed/bPVPyNRcYqc"
+                src="https://www.youtube.com/embed/QYTzrl3QMxU"
                 title="Personalized Gift Tutorial"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

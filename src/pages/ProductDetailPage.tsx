@@ -1,3 +1,200 @@
+
+// import { useState, useEffect } from "react"
+// import { useParams, useNavigate } from "react-router-dom"
+// import { Star, ChevronLeft, Plus, Minus } from "lucide-react"
+// import { Button } from "../components/ui/button"
+// import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group"
+// import { Label } from "@/components/ui/Label"
+// import { products } from "@/layouts/data/products"
+// import type { Product } from "@/layouts/data/type/product"
+// import { useCart } from "@/layouts/cart-product/contexts/cart-context"
+
+// export default function ProductDetailPage() {
+//   const { id } = useParams<{ id: string }>()
+//   const navigate = useNavigate()
+//   const [product, setProduct] = useState<Product | null>(null)
+//   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+//   const [quantity, setQuantity] = useState(1)
+//   const { dispatch } = useCart()
+
+//   useEffect(() => {
+//     const foundProduct = products.find((p) => p.id === Number(id))
+//     if (!foundProduct) {
+//       navigate("/404")
+//     } else {
+//       setProduct(foundProduct)
+//     }
+//   }, [id, navigate])
+
+//   const handleNextImage = () => {
+//     if (product) {
+//       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % (product.image1 ? 3 : 2))
+//     }
+//   }
+
+//   const handlePrevImage = () => {
+//     if (product) {
+//       setCurrentImageIndex((prevIndex) => (prevIndex - 1 + (product.image1 ? 3 : 2)) % (product.image1 ? 3 : 2))
+//     }
+//   }
+
+//   const handleBackClick = () => {
+//     navigate(-1)
+//   }
+
+//   const handleQuantityChange = (delta: number) => {
+//     setQuantity((prev) => Math.max(1, prev + delta))
+//   }
+
+//   const handleAddToCart = () => {
+//     if (product) {
+//       dispatch({
+//         type: "ADD_ITEM",
+//         payload: {
+//           product,
+//           quantity,
+//         },
+//       })
+//       navigate("/cart")
+//     }
+//   }
+
+//   if (!product) {
+//     return (
+//       <div className="container mx-auto px-4 py-8">
+//         <div className="animate-pulse">
+//           <div className="h-96 bg-gray-200 rounded-lg mb-4"></div>
+//           <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
+//           <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+//         </div>
+//       </div>
+//     )
+//   }
+
+//   const images = [product.image, product.image1].filter(Boolean)
+
+//   return (
+//     <div className="container mx-auto px-4 py-8">
+//       <Button onClick={handleBackClick} className="mb-4 flex items-center gap-2 opacity-10 border-current">
+//         <ChevronLeft className="w-5 h-5" />
+//       </Button>
+//       <div className="grid md:grid-cols-2 gap-8">
+//         {/* Product Images */}
+//         <div className="space-y-4">
+//           <div className="aspect-square relative overflow-hidden rounded-lg border">
+//             <img
+//               src={images[currentImageIndex] || "/placeholder.svg"}
+//               alt={product.name}
+//               className="object-cover w-full h-full"
+//             />
+//             {/* Navigation Buttons */}
+//             <div className="absolute top-1/2 left-0 transform -translate-y-1/2 text-white">
+//               <button onClick={handlePrevImage} className="bg-black bg-opacity-50 p-2 rounded-full">
+//                 &lt;
+//               </button>
+//             </div>
+//             <div className="absolute top-1/2 right-0 transform -translate-y-1/2 text-white">
+//               <button onClick={handleNextImage} className="bg-black bg-opacity-50 p-2 rounded-full">
+//                 &gt;
+//               </button>
+//             </div>
+//           </div>
+//           <div className="grid grid-cols-4 gap-4">
+//             {images.map((image, index) => (
+//               <div
+//                 key={index}
+//                 className={`aspect-square relative overflow-hidden rounded-lg border cursor-pointer ${
+//                   index === currentImageIndex ? "ring-2 ring-primary" : ""
+//                 }`}
+//                 onClick={() => setCurrentImageIndex(index)}
+//               >
+//                 <img
+//                   src={image || "/placeholder.svg"}
+//                   alt={`${product.name} alternate view`}
+//                   className="object-cover w-full h-full"
+//                 />
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+
+//         {/* Product Info */}
+//         <div className="space-y-6">
+//           <div>
+//             <h1 className="text-2xl md:text-3xl font-bold">{product.name}</h1>
+//             <div className="flex items-center gap-4 mt-2">
+//               <div className="flex items-center gap-0.5">
+//                 {[...Array(5)].map((_, i) => (
+//                   <Star
+//                     key={i}
+//                     className={`w-5 h-5 ${
+//                       i < (product.rating ?? 0) ? "fill-primary" : "fill-muted stroke-muted-foreground"
+//                     }`}
+//                   />
+//                 ))}
+//               </div>
+//             </div>
+//           </div>
+
+//           <div className="space-y-1">
+//             <div className="text-2xl md:text-3xl font-bold">${product.price}</div>
+//             {product.originalPrice && (
+//               <div className="text-muted-foreground line-through">${product.originalPrice}</div>
+//             )}
+//           </div>
+
+//           <div className="space-y-4">
+//             {product.colors && (
+//               <div className="space-y-2">
+//                 <Label htmlFor="color-selection">Color</Label>
+//                 <RadioGroup defaultValue={product.colors[0]} className="flex flex-wrap gap-2">
+//                   {product.colors.map((color) => (
+//                     <Label
+//                       key={color}
+//                       htmlFor={`color-${color}`}
+//                       className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
+//                     >
+//                       <RadioGroupItem value={color} id={`color-${color}`} />
+//                       <div className="w-4 h-4 rounded-full border" style={{ backgroundColor: color }} />
+//                       {color}
+//                     </Label>
+//                   ))}
+//                 </RadioGroup>
+//               </div>
+//             )}
+
+//             {/* Add quantity controls */}
+//             <div className="space-y-2">
+//               <Label htmlFor="quantity">Quantity</Label>
+//               <div className="flex items-center gap-3">
+//                 <button className="border rounded p-2" onClick={() => handleQuantityChange(-1)}>
+//                   <Minus className="w-4 h-4" />
+//                 </button>
+//                 <span>{quantity}</span>
+//                 <button className="border rounded p-2" onClick={() => handleQuantityChange(1)}>
+//                   <Plus className="w-4 h-4" />
+//                 </button>
+//               </div>
+//             </div>
+
+//             <Button size="lg" className="w-full" onClick={handleAddToCart}>
+//               Add to Cart
+//             </Button>
+//           </div>
+
+//           <div className="prose prose-sm">
+//             <h3>Product Details</h3>
+//             <ul>
+//               {product.productType && <li>Type: {product.productType}</li>}
+//               {product.occasions && <li>Perfect for: {product.occasions.join(", ")}</li>}
+//               {product.giftFor && <li>Ideal gift for: {product.giftFor.join(", ")}</li>}
+//             </ul>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
 "use client"
 
 import { useState, useEffect } from "react"
@@ -9,6 +206,7 @@ import { Label } from "@/components/ui/Label"
 import { products } from "@/layouts/data/products"
 import type { Product } from "@/layouts/data/type/product"
 import { useCart } from "@/layouts/cart-product/contexts/cart-context"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -16,7 +214,13 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<Product | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [quantity, setQuantity] = useState(1)
+  const [selectedSize, setSelectedSize] = useState<string>("")
+  const [selectedColor, setSelectedColor] = useState<string>("")
+  const [error, setError] = useState<string>("")
   const { dispatch } = useCart()
+
+  const sizes = ["S", "M", "L", "XL", "2XL", "3XL", "4XL"]
+  const colors = ["White", "Black", "Navy", "Red", "Gray"]
 
   useEffect(() => {
     const foundProduct = products.find((p) => p.id === Number(id))
@@ -24,6 +228,9 @@ export default function ProductDetailPage() {
       navigate("/404")
     } else {
       setProduct(foundProduct)
+      if (foundProduct.colors && foundProduct.colors.length > 0) {
+        setSelectedColor(foundProduct.colors[0])
+      }
     }
   }, [id, navigate])
 
@@ -48,11 +255,25 @@ export default function ProductDetailPage() {
   }
 
   const handleAddToCart = () => {
+    if (!selectedSize) {
+      setError("Please select a size")
+      return
+    }
+    if (!selectedColor) {
+      setError("Please select a color")
+      return
+    }
+
     if (product) {
+      const productWithOptions = {
+        ...product,
+        selectedSize,
+        selectedColor,
+      }
       dispatch({
         type: "ADD_ITEM",
         payload: {
-          product,
+          product: productWithOptions,
           quantity,
         },
       })
@@ -88,33 +309,38 @@ export default function ProductDetailPage() {
               alt={product.name}
               className="object-cover w-full h-full"
             />
-            {/* Navigation Buttons */}
-            <div className="absolute top-1/2 left-0 transform -translate-y-1/2 text-white">
-              <button onClick={handlePrevImage} className="bg-black bg-opacity-50 p-2 rounded-full">
-                &lt;
-              </button>
-            </div>
-            <div className="absolute top-1/2 right-0 transform -translate-y-1/2 text-white">
-              <button onClick={handleNextImage} className="bg-black bg-opacity-50 p-2 rounded-full">
-                &gt;
-              </button>
-            </div>
+            {images.length > 1 && (
+              <>
+                <button
+                  onClick={handlePrevImage}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={handleNextImage}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
+                >
+                  <ChevronLeft className="w-6 h-6 rotate-180" />
+                </button>
+              </>
+            )}
           </div>
           <div className="grid grid-cols-4 gap-4">
             {images.map((image, index) => (
-              <div
+              <button
                 key={index}
-                className={`aspect-square relative overflow-hidden rounded-lg border cursor-pointer ${
+                className={`aspect-square relative overflow-hidden rounded-lg border hover:border-primary transition-colors ${
                   index === currentImageIndex ? "ring-2 ring-primary" : ""
                 }`}
                 onClick={() => setCurrentImageIndex(index)}
               >
                 <img
                   src={image || "/placeholder.svg"}
-                  alt={`${product.name} alternate view`}
+                  alt={`${product.name} view ${index + 1}`}
                   className="object-cover w-full h-full"
                 />
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -144,51 +370,101 @@ export default function ProductDetailPage() {
             )}
           </div>
 
-          <div className="space-y-4">
-            {product.colors && (
-              <div className="space-y-2">
-                <Label htmlFor="color-selection">Color</Label>
-                <RadioGroup defaultValue={product.colors[0]} className="flex flex-wrap gap-2">
-                  {product.colors.map((color) => (
-                    <Label
-                      key={color}
-                      htmlFor={`color-${color}`}
-                      className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
-                    >
-                      <RadioGroupItem value={color} id={`color-${color}`} />
-                      <div className="w-4 h-4 rounded-full border" style={{ backgroundColor: color }} />
-                      {color}
-                    </Label>
-                  ))}
-                </RadioGroup>
-              </div>
-            )}
+          {error && (
+            <Alert>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-            {/* Add quantity controls */}
+          <div className="space-y-4">
+            {/* Size Selection */}
+            <div className="space-y-2">
+              <Label htmlFor="size-selection">Size</Label>
+              <RadioGroup value={selectedSize} onValueChange={setSelectedSize} className="grid grid-cols-4 gap-2">
+                {sizes.map((size) => (
+                  <Label
+                    key={size}
+                    htmlFor={`size-${size}`}
+                    className={`border cursor-pointer rounded-md p-2 flex items-center justify-center gap-2 transition-all duration-200 hover:border-primary ${
+                      selectedSize === size
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "hover:bg-primary/10"
+                    }`}
+                  >
+                    <RadioGroupItem value={size} id={`size-${size}`} className="sr-only" />
+                    {size}
+                  </Label>
+                ))}
+              </RadioGroup>
+            </div>
+
+            {/* Color Selection */}
+            <div className="space-y-2">
+              <Label htmlFor="color-selection">Color</Label>
+              <RadioGroup
+                value={selectedColor}
+                onValueChange={setSelectedColor}
+                className="grid grid-cols-2 sm:grid-cols-3 gap-2"
+              >
+                {colors.map((color) => (
+                  <Label
+                    key={color}
+                    htmlFor={`color-${color}`}
+                    className={`border cursor-pointer rounded-md p-2 flex items-center gap-2 transition-all duration-200 hover:border-primary ${
+                      selectedColor === color
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "hover:bg-primary/10"
+                    }`}
+                  >
+                    <RadioGroupItem value={color} id={`color-${color}`} className="sr-only" />
+                    <div className="w-4 h-4 rounded-full border" style={{ backgroundColor: color.toLowerCase() }} />
+                    {color}
+                  </Label>
+                ))}
+              </RadioGroup>
+            </div>
+
+            {/* Quantity Selection */}
             <div className="space-y-2">
               <Label htmlFor="quantity">Quantity</Label>
               <div className="flex items-center gap-3">
-                <button className="border rounded p-2" onClick={() => handleQuantityChange(-1)}>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => handleQuantityChange(-1)}
+                  className="h-10 w-10 rounded-md hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
                   <Minus className="w-4 h-4" />
-                </button>
-                <span>{quantity}</span>
-                <button className="border rounded p-2" onClick={() => handleQuantityChange(1)}>
+                </Button>
+                <span className="w-12 text-center text-lg">{quantity}</span>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => handleQuantityChange(1)}
+                  className="h-10 w-10 rounded-md hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
                   <Plus className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
             </div>
 
-            <Button size="lg" className="w-full" onClick={handleAddToCart}>
+            <Button
+              size="lg"
+              className="w-full bg-[#DC2626] hover:bg-[#DC2626]/90 transition-all duration-300 transform hover:scale-105 active:scale-95"
+              onClick={handleAddToCart}
+            >
               Add to Cart
             </Button>
           </div>
 
+          {/* Product Details */}
           <div className="prose prose-sm">
-            <h3>Product Details</h3>
-            <ul>
+            <h3 className="text-lg font-semibold">Product Details</h3>
+            <ul className="list-disc pl-4 space-y-1">
               {product.productType && <li>Type: {product.productType}</li>}
               {product.occasions && <li>Perfect for: {product.occasions.join(", ")}</li>}
               {product.giftFor && <li>Ideal gift for: {product.giftFor.join(", ")}</li>}
+              {product.description && <li>{product.description}</li>}
             </ul>
           </div>
         </div>

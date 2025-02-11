@@ -1,15 +1,16 @@
-"use client"
 
 import { useState } from "react"
 import { Search, User, ShoppingCart, ChevronDown, Menu, X } from "lucide-react"
 import { AuthModal } from "./auth-modal"
 import { Link, useNavigate } from "react-router-dom"
+import { useCart } from "@/layouts/cart-product/contexts/cart-context"
 
 export function SiteHeader() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(null)
   const navigate = useNavigate()
+  const { state } = useCart()
 
   const toggleMobileDropdown = (menu: string) => {
     setOpenMobileDropdown(openMobileDropdown === menu ? null : menu)
@@ -57,7 +58,7 @@ export function SiteHeader() {
                 <div className="relative">
                   <ShoppingCart className="h-5 w-5" />
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                    0
+                    {state.items.reduce((total, item) => total + item.quantity, 0)}
                   </span>
                 </div>
                 <span className="hidden lg:inline text-sm">Cart</span>

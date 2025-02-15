@@ -22,7 +22,7 @@ export default function ProductDetailPage() {
   const { dispatch } = useCart()
 
   const sizes = ["S", "M", "L", "XL", "2XL", "3XL", "4XL"]
-  const colors = ["White", "Black", "Navy", "Red", "Gray"]
+  const colors = product?.colors || []
 
   useEffect(() => {
     const foundProduct = products.find((p) => p.id === Number(id))
@@ -61,7 +61,7 @@ export default function ProductDetailPage() {
       setError("Please select a size")
       return
     }
-    if (!selectedColor) {
+    if (colors.length > 0 && !selectedColor) {
       setError("Please select a color")
       return
     }
@@ -201,30 +201,32 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Color Selection */}
-            <div className="space-y-2">
-              <Label htmlFor="color-selection">Color</Label>
-              <RadioGroup
-                value={selectedColor}
-                onValueChange={setSelectedColor}
-                className="grid grid-cols-2 sm:grid-cols-3 gap-2"
-              >
-                {colors.map((color) => (
-                  <Label
-                    key={color}
-                    htmlFor={`color-${color}`}
-                    className={`border cursor-pointer rounded-md p-2 flex items-center gap-2 transition-all duration-200 hover:border-primary ${
-                      selectedColor === color
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "hover:bg-primary/10"
-                    }`}
-                  >
-                    <RadioGroupItem value={color} id={`color-${color}`} className="sr-only" />
-                    <div className="w-4 h-4 rounded-full border" style={{ backgroundColor: color.toLowerCase() }} />
-                    {color}
-                  </Label>
-                ))}
-              </RadioGroup>
-            </div>
+            {colors.length > 0 && (
+              <div className="space-y-2">
+                <Label htmlFor="color-selection">Color</Label>
+                <RadioGroup
+                  value={selectedColor}
+                  onValueChange={setSelectedColor}
+                  className="grid grid-cols-2 sm:grid-cols-3 gap-2"
+                >
+                  {colors.map((color) => (
+                    <Label
+                      key={color}
+                      htmlFor={`color-${color}`}
+                      className={`border cursor-pointer rounded-md p-2 flex items-center gap-2 transition-all duration-200 hover:border-primary ${
+                        selectedColor === color
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "hover:bg-primary/10"
+                      }`}
+                    >
+                      <RadioGroupItem value={color} id={`color-${color}`} className="sr-only" />
+                      <div className="w-4 h-4 rounded-full border" style={{ backgroundColor: color.toLowerCase() }} />
+                      {color}
+                    </Label>
+                  ))}
+                </RadioGroup>
+              </div>
+            )}
 
             {/* Quantity Selection */}
             <div className="space-y-2">

@@ -22,3 +22,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+#file based project
+src/services/firebaseConfig1.ts
